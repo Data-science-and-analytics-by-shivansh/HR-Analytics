@@ -1,0 +1,19 @@
+Total Headcount = COUNTROWS(Employees)
+
+Turnover Rate % = 
+DIVIDE(
+    SUM(Employees[AttritionFlag]),
+    [Total Headcount]
+) * 100
+
+Female % = 
+DIVIDE(
+    CALCULATE(COUNTROWS(Employees), Employees[Gender] = "Female"),
+    [Total Headcount]
+) * 100
+
+Diversity Index = [Female %] * 0.6 + AVERAGE(Employees[WorkLifeBalance]) * 4   // Custom weighted index
+
+Avg Monthly Income = AVERAGE(Employees[MonthlyIncome])
+
+Hiring Impact Headcount = [Total Headcount] + [WhatIf New Hires]   // Use What-If Parameter
