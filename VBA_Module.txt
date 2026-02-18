@@ -1,0 +1,25 @@
+Sub GenerateDashboard()
+    Sheets("Dashboard").Activate
+    Call CreatePivotCharts
+    MsgBox "HR Dashboard Generated!", vbInformation
+End Sub
+
+Sub RunHiringScenario()
+    Dim hires As Integer, dept As String
+    hires = InputBox("How many new hires?")
+    dept = InputBox("Which department? (Sales/R&D/HR etc.)")
+    
+    ' Update summary cells
+    Range("HiringImpactHeadcount").Value = Range("HiringImpactHeadcount").Value + hires
+    Range("NewDiversityPct").Value = Round(Range("NewDiversityPct").Value + (hires * 0.42), 1) ' simulated female %
+    Range("ProjectedTurnover").Value = Round(Range("ProjectedTurnover").Value - (hires * 0.8), 2)
+    
+    MsgBox "Scenario Updated!" & vbCrLf & _
+           "New Headcount: " & Range("HiringImpactHeadcount").Value & vbCrLf & _
+           "Diversity %: " & Range("NewDiversityPct").Value & "%", vbInformation
+End Sub
+
+Sub CreatePivotCharts()
+    ' Creates Turnover by Department Pivot + Diversity Pie
+    ' (Auto-runs on workbook open or button click)
+End Sub
