@@ -1,0 +1,7 @@
+let
+    Source = Csv.Document(File.Contents("data\hr_analytics_data.csv")),
+    #"Promoted Headers" = Table.PromoteHeaders(Source),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"MonthlyIncome", type number}, {"YearsAtCompany", Int64.Type}}),
+    #"Added TurnoverFlag" = Table.AddColumn(#"Changed Type", "TurnoverFlag", each if [Attrition] = "Yes" then 1 else 0, Int64.Type)
+in
+    #"Added TurnoverFlag"
