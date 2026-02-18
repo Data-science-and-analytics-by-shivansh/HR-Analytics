@@ -1,0 +1,31 @@
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+df = pd.read_csv('data/hr_analytics_data.csv')
+
+# Simple ML Attrition Predictor
+X = pd.get_dummies(df[['Age','MonthlyIncome','YearsAtCompany','OverTime','JobSatisfaction','WorkLifeBalance']])
+y = (df['Attrition'] == 'Yes').astype(int)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+print(f"Model Accuracy: {model.score(X_test, y_test):.1%}")
+
+# Hiring Scenario Simulator
+def simulate_hiring(dept, num_hires, avg_age=32, avg_income=6500):
+    new_rows = pd.DataFrame({
+        'EmpID': [f'NEW{i}' for i in range(num_hires)],
+        'Department': [dept] * num_hires,
+        'Gender': np.random.choice(['Male','Female'], num_hires, p=[0.55,0.45]),
+        'Age': np.random.randint(25,45,num_hires),
+        'MonthlyIncome': np.random.randint(avg_income-2000, avg_income+3000, num_hires),
+        'Attrition': ['No'] * num_hires
+    })
+    global df
+    df = pd.concat([df, new_rows], ignore_index=True)
+    print(f"Simulated hiring {num_hires} in {dept}. New Turnover Rate: {df['Attrition'].value_counts(normalize=True)['Yes']*100:.2f}%")
+
+# Example usage
+simulate_hiring('Sales', 25)
